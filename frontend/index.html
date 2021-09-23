@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  
+
   <style>
     /* Remove the navbar's default margin-bottom and rounded borders */
     .navbar {
@@ -67,10 +67,9 @@
 
       <div class="col-xs-4 col-xs-offset-4">
         <form name='photo_form' id='photo_form' method='GET' action="">
-            <input type="file" class="form-control" id="fileUpload" aria-describedby="fileUpload"
-              aria-label="Upload">
-            <button class="btn btn-outline-secondary" type="button" id="submitButton"
-              onclick="sendPostRequest()" disabled>Submit</button>
+          <input type="file" class="form-control" id="fileUpload" aria-describedby="fileUpload" aria-label="Upload">
+          <button class="btn btn-outline-secondary" type="button" id="submitButton" onclick="sendPostRequest()"
+            disabled>Submit</button>
         </form>
       </div>
 
@@ -88,37 +87,37 @@
     <script type="text/javascript">
       var httpRequest = new XMLHttpRequest();
 
-      $(document).ready(function(){
+      $(document).ready(function () {
 
         // image validation - checking file size and image type
-        $("#fileUpload").change(function(){
+        $("#fileUpload").change(function () {
           // Get image from form
           // FIXME: refactor this into a function 
           // this code is used a lot could make code more readable
           var form = document.getElementById('photo_form');
           var file = form.fileUpload.files[0];
           var sizeKB = file['size'] / 1000;
-          
+
           // if size too big, reset form
           // this leaves button disbaled and removes the file inputted
-          if(sizeKB > 1000000) {
+          if (sizeKB > 1000000) {
             document.getElementById('photo_form').reset();
             alert('please select an image less than 1GB');
           }
-          else if(file['type'] != 'image/jpeg' && file['type'] != 'image/png'){
+          else if (file['type'] != 'image/jpeg' && file['type'] != 'image/png') {
             document.getElementById('photo_form').reset();
             alert('please select a png or jpg file');
           }
-          else if($('#fileUpload').val()==''){
-            $('#submitButton').attr('disabled',true)
-          } 
-          else{
-            $('#submitButton').attr('disabled',false);
+          else if ($('#fileUpload').val() == '') {
+            $('#submitButton').attr('disabled', true)
+          }
+          else {
+            $('#submitButton').attr('disabled', false);
           }
 
         })
 
-      }); 
+      });
 
       function getResponse() {
 
@@ -174,7 +173,7 @@
           return false;
         }
         httpRequest.onreadystatechange = getResponse;
-        httpRequest.open('POST', 'https://image-classifier-app.azurewebsites.net/image-upload');
+        httpRequest.open('POST', 'http://127.0.0.1:5000/image-upload');
         // Do not set Content-Type, allow the browser to set it for you
         httpRequest.send(formData);
       }

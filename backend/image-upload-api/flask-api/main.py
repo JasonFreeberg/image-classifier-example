@@ -9,11 +9,14 @@ from tensorflow.keras.models import model_from_json
 ALLOWED_EXTENSIONS = set(['jpeg', 'png', 'jpg'])
 
 # File extension must be from ALLOWED_EXTENSIONS
+
+
 def allowed_file(filename):
     '''
     This function checks if the uploaded file has the correct extensions.
     '''
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # Deserialize the json file and create the model
 with open("./notebooks/models/2021-09-06-keras.json", "r") as json_file:
@@ -22,6 +25,8 @@ with open("./notebooks/models/2021-09-06-keras.json", "r") as json_file:
 model_test = model_from_json(json_model)
 
 # Some functions for resp
+
+
 def result(array):
     '''
     Given the prediciton array from the model, this method returns the predicted label.
@@ -31,6 +36,7 @@ def result(array):
     if array[0][0] < array[0][1]:
         return 'forged'
     return 'unable to determine'
+
 
 def result_percentage(array):
     '''
@@ -43,6 +49,8 @@ def result_percentage(array):
     return 'unable to determine'
 
 # serving index.html on flask
+
+
 @app.route('/')
 def home():
     '''
@@ -51,6 +59,8 @@ def home():
     return send_from_directory('frontend', 'index.html')
 
 # API to validate the Image file
+
+
 @app.route('/image-upload', methods=["POST"])
 def image_upload():
     '''
@@ -73,16 +83,16 @@ def image_upload():
         img = Image.open(file)
         if 'L' in img.getbands():
             img = ImageOps.colorize(img, black='blue', white='white')
-        img_after_resize = img.resize((200,200))
+        img_after_resize = img.resize((200, 200))
         img_array = np.asarray(img_after_resize)
-        img_array_optimized = np.array(img_array, dtype = 'float32')/255.0
-        data = img_array_optimized.reshape((1,-1))
+        img_array_optimized = np.array(img_array, dtype='float32')/255.0
+        data = img_array_optimized.reshape((1, -1))
         prediction = model_test.predict(data)
         print(prediction)
         resp = jsonify({
             'predicted-label':  str(result(prediction)),
             "prediction-confidence-percentage": str(result_percentage(prediction))
-            })
+        })
         resp.status_code = 201
         return resp
 
@@ -90,6 +100,7 @@ def image_upload():
     resp.status_code = 400
     return resp
 
+
 # Start Flask App
 if __name__ == "__main__":
-    app.run(debug = True, host ='0.0.0.0', port = 5000)
+    app.run(debug=True)
