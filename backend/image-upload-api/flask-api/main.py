@@ -70,6 +70,8 @@ def image_upload():
 
     # Correct request
     if file and allowed_file(file.filename):
+        
+
         img = Image.open(file)
         if 'L' in img.getbands():
             img = ImageOps.colorize(img, black='blue', white='white')
